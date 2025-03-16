@@ -26,7 +26,9 @@ pkg install nodejs -y
 ```bash
 pkg install git -y
 ```
-
+```bash
+pkg install ffmpeg -y
+```
 - Intalacion de Librerias:
 ```bash
 npm install @whiskeysockets/baileys
@@ -36,9 +38,6 @@ npm install qrcode-terminal
 ```
 ```bash
 npm install wa-sticker-formatter
-```
-```bash
-npm install ffmpeg
 ```
 ```bash
 npm install wa-sticker-formatter
