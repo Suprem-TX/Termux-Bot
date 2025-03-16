@@ -16,7 +16,18 @@
 
 ## Instalacion
 
-- Paquetes npm:
+- Intalacion y Actualizacion de Paquetes:
+```bash
+pkg update -y && pkg update -y
+```
+```bash
+pkg install nodejs -y
+```
+```bash
+pkg install git -y
+```
+
+- Intalacion de Librerias:
 ```bash
 npm install @whiskeysockets/baileys
 ```
@@ -30,8 +41,12 @@ npm install wa-sticker-formatter
 npm install ffmpeg
 ```
 
-## Instalación
+## Ejecucion
 
 1. Clona este repositorio:
-   ```bash
-   git clone https://github.com/tuusuario/whatsapp-bot.git
+```bash
+git clone https://github.com/Suprem-TX/Termux-Bot.git && cd Termux-Bot
+```
+```bash
+node index.js
+```
