@@ -42,3 +42,5 @@ git clone https://github.com/Suprem-TX/Termux-Bot.git && cd Termux-Bot
 ```bash
 node index.js
 ```
+
+## USA EL COMANDO /MENU
