@@ -1,13 +1,9 @@
-const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, downloadContentFromMessage } = require('@whiskeysockets/baileys');
+const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = require('@whiskeysockets/baileys');
 const qrcode = require('qrcode-terminal');
 const fs = require('fs');
 const path = require('path');
 
-const cooldowns = {};
-const sentStickers = {};
-
 async function startBot() {
-
   const { state, saveCreds } = await useMultiFileAuthState('./auth_info');
 
   const sock = makeWASocket({
@@ -46,11 +42,34 @@ async function startBot() {
 
     // Comando /menu
     if (text === '/menu') {
-      const menuMessage = `📜 *Menu del Bot* 📜\n\n` +
-        `BOT QUE DA LA BIENVENIDA Y DESPEDIDA\n` +
-        `🔹 *Mas funciones proximamente...*`;
+      const menuMessage = `📜 *Menú del Bot* 📜\n\n` +
+        `🔹 */kick @usuario* .`;
 
       await sock.sendMessage(sender, { text: menuMessage });
+    }
+
+    // Comando /kick
+    if (text.startsWith('/kick')) {
+      const isAdmin = async (jid, user) => {
+        const groupMetadata = await sock.groupMetadata(jid);
+        const admins = groupMetadata.participants.filter(p => p.admin);
+        return admins.some(a => a.id === user);
+      };
+
+      if (!msg.key.participant) return;
+      const author = msg.key.participant;
+
+      if (!(await isAdmin(sender, author))) {
+        return sock.sendMessage(sender, { text: '❌ No tienes permisos de administrador para expulsar usuarios.' });
+      }
+
+      const mentionedJid = msg.message.extendedTextMessage?.contextInfo?.mentionedJid;
+      if (!mentionedJid || mentionedJid.length === 0) {
+        return sock.sendMessage(sender, { text: '⚠️ Debes mencionar a un usuario para expulsarlo.' });
+      }
+
+      await sock.groupParticipantsUpdate(sender, mentionedJid, 'remove');
+      await sock.sendMessage(sender, { text: `✅ Usuario expulsado con éxito.` });
     }
   });
 
@@ -58,16 +77,36 @@ async function startBot() {
     const { id, participants, action } = update;
 
     if (action === 'add') {
-      // DA LA BIENVENIDA
       for (const participant of participants) {
         const welcomeMessage = `Bienvenido al grupo, @${participant.split('@')[0]}!`;
-        await sock.sendMessage(id, { text: welcomeMessage, mentions: [participant] });
+
+        // Imagen de bienvenida
+        const welcomeImagePath = path.join(__dirname, 'img/welcome.png');
+        if (fs.existsSync(welcomeImagePath)) {
+          await sock.sendMessage(id, {
+            image: fs.readFileSync(welcomeImagePath),
+            caption: welcomeMessage,
+            mentions: [participant]
+          });
+        } else {
+          await sock.sendMessage(id, { text: welcomeMessage, mentions: [participant] });
+        }
       }
     } else if (action === 'remove') {
-      // MUESTRA QUIEN SALIO 
       for (const participant of participants) {
-        const goodbyeMessage = `Adios @${participant.split('@')[0]}, `;
-        await sock.sendMessage(id, { text: goodbyeMessage, mentions: [participant] });
+        const goodbyeMessage = `Adiós @${participant.split('@')[0]}, te extrañaremos.`;
+
+        // Imagen de despedida
+        const goodbyeImagePath = path.join(__dirname, 'img/bye.png');
+        if (fs.existsSync(goodbyeImagePath)) {
+          await sock.sendMessage(id, {
+            image: fs.readFileSync(goodbyeImagePath),
+            caption: goodbyeMessage,
+            mentions: [participant]
+          });
+        } else {
+          await sock.sendMessage(id, { text: goodbyeMessage, mentions: [participant] });
+        }
       }
     }
   });
