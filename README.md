@@ -12,7 +12,7 @@
 
 - **Comando /kick**:
   - Al usar el comando y mencionando al usuario podras expulsarlo
-  - 
+  
 ## Instalacion
 
 - Intalacion y Actualizacion de Paquetes:
