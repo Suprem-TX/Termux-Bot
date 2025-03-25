@@ -2,10 +2,6 @@
 
 ## Características
 
-- **Generación de Stickers**:
-- 
-  - Convierte imágenes en stickers
-
 - **Bienvenida y Despedida**:
   - Envia un mensaje de bienvenida a los nuevos participantes en los grupos.
   - Envia un mensaje de despedida cuando alguien abandona el grupo.
