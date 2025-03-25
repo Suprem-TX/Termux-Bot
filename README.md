@@ -10,6 +10,9 @@
   - El bot guarda su estado de autenticación utilizando un archivo local para mantener la sesión activa entre reinicios.
   - Muestra un código QR para autenticar el bot en WhatsApp.
 
+- **Comando /kick**:
+  - Al usar el comando y mencionando al usuario podras expulsarlo
+  - 
 ## Instalacion
 
 - Intalacion y Actualizacion de Paquetes:
